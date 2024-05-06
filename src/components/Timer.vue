@@ -1,29 +1,21 @@
 <template>
     <div class="is-flex is-align-items-center is-justify-content-space-between">
         <Stopwatch :time-in-seconds="timeInSeconds" />
-        <button class="button" @click="start" :disabled="stopwatchRunning">
-            <span class="icon">
-                <i class="fas fa-play"></i>
-            </span>
-            <span>play</span>
-        </button>
-        <button class="button" @click="finish" :disabled="!stopwatchRunning">
-            <span class="icon">
-                <i class="fas fa-stop"></i>
-            </span>
-            <span>stop</span>
-        </button>
+        <Button @clicked="start" icon="fas fa-play" text="play" :disabled="stopwatchRunning" />
+        <Button @clicked="finish" icon="fas fa-stop" text="stop" :disabled="!stopwatchRunning" />
     </div>
 </template>
-
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Stopwatch from './Stopwatch.vue';
+import Button from './Button.vue';
 
 export default defineComponent({
     name: 'TimerComponent',
+    emits: ['whenTimerFinished'],
     components: {
-        Stopwatch
+        Stopwatch,
+        Button
     },
     data() {
         return {
@@ -43,6 +35,8 @@ export default defineComponent({
         finish() {
             this.stopwatchRunning = false
             clearInterval(this.stopwatch)
+            this.$emit('whenTimerFinished', this.timeInSeconds)
+            this.timeInSeconds = 0
         }
     }
 })
