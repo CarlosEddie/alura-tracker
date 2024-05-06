@@ -41,7 +41,7 @@ export default defineComponent({
         }
     },
     computed: {
-        elapsedTime () {
+        elapsedTime (): string {
             return new Date(this.timeInSeconds * 1000).toISOString().slice(11, 19)
         }
     },
