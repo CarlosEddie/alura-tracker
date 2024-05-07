@@ -17,6 +17,7 @@ import Timer from './Timer.vue';
 
 export default defineComponent({
     name: 'FormComponent',
+    emits: ['whenSaveTask'],
     components: {
         Timer
     },
@@ -27,8 +28,10 @@ export default defineComponent({
     },
     methods: {
         finishTask(elapsedTime: number) : void {
-            console.log('task time', elapsedTime);
-            console.log('task description', this.description);
+            this.$emit('whenSaveTask', {
+                durationInSeconds: elapsedTime,
+                description: this.description
+            })
             this.description = ''
         }
     }
