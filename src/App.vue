@@ -4,7 +4,13 @@
       <SideBar />
     </div>
     <div class="column is-three-quarter">
-      <Form />
+      <Form @whenSaveTask="saveTask" />
+      <div class="list">
+        <Task v-for="(task, index) in tasks" :key="index" :task="task" />
+        <Box v-if="listIsEmpty">
+          Let's start the tasks (*^w^)b
+        </Box>
+      </div>
     </div>
   </main>
 </template>
@@ -13,14 +19,38 @@
 import { defineComponent } from 'vue';
 import SideBar from './components/SideBar.vue';
 import Form from './components/Form.vue';
+import Task from './components/Task.vue';
+import ITask from './interfaces/ITask'
+import Box from './components/Box.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
     SideBar,
-    Form
+    Form,
+    Task,
+    Box
+  },
+  data() {
+    return {
+      tasks: [] as ITask[]
+    }
+  },
+  computed: {
+    listIsEmpty() : boolean{
+      return this.tasks.length === 0;
+    }
+  },
+  methods: {
+    saveTask(task: ITask) {
+      this.tasks.push(task)
+    }
   }
 });
 </script>
 
-<style></style>
+<style>
+.list {
+  padding: 1.25rem;
+}
+</style>
