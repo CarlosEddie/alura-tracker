@@ -1,6 +1,6 @@
 <template>
     <section class="projects">
-        <h1 class="title">projects</h1>
+        <h1 class="title">Projects</h1>
         <form @submit.prevent="save">
             <div class="field">
                 <label for="projectName" class="label">Project Name</label>
@@ -20,6 +20,17 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
     name: 'FormComponent',
+    props: {
+        id: {
+            type: String
+        }
+    },
+    mounted() {
+        if (this.id) {
+            const project = this.store.state.projects.find(project => project.id == this.id)
+            this.projectName = project?.name || ''
+        }
+    },
     data() {
         return {
             projectName: "",
@@ -27,7 +38,11 @@ export default defineComponent({
     },
     methods: {
         save() {
-            this.store.commit('ADD_PROJECT', this.projectName)
+            if (this.id) {
+                this.store.commit('MODIFY_PROJECT', { id: this.id, name: this.projectName })
+            } else {
+                this.store.commit('ADD_PROJECT', this.projectName)
+            }
             this.projectName = ''
             this.$router.push('/projects')
         }
