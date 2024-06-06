@@ -16,9 +16,9 @@
 <script lang="ts">
 import { NotificationType } from '@/interfaces/INotification';
 import { useStore } from '@/store'
-import { ADD_PROJECT, MODIFY_PROJECT, } from '@/store/mutation-type';
 import { defineComponent } from 'vue';
 import useNotifier from '@/hooks/notifier'
+import { CHANGE_PROJECT, REGISTER_PROJECT } from '@/store/actions-type';
 
 export default defineComponent({
     name: 'FormComponent',
@@ -41,15 +41,23 @@ export default defineComponent({
     methods: {
         save() {
             if (this.id) {
-                this.store.commit(MODIFY_PROJECT, { id: this.id, name: this.projectName })
+                this.store.dispatch(CHANGE_PROJECT, { id: this.id, name: this.projectName })
+                    .then(() => {
+                        this.dealWithSuccess()
+                    })
             } else {
-                this.store.commit(ADD_PROJECT, this.projectName)
+                this.store.dispatch(REGISTER_PROJECT, this.projectName)
+                    .then(() => {
+                        this.dealWithSuccess()
+                    })
             }
+
+        },
+        dealWithSuccess() {
             this.projectName = ''
             this.notify(NotificationType.SUCCESS, 'Excellent', 'Alright, your project has been saved.')
             this.$router.push('/projects')
-        },
-        
+        }
     },
     setup() {
         const store = useStore()
