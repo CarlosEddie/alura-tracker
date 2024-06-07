@@ -9,11 +9,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import Form from '../components/Form.vue';
 import Task from '../components/Task.vue';
-import ITask from '../interfaces/ITask'
 import Box from '../components/Box.vue';
+import { useStore } from '@/store';
+import { GET_TASKS } from '@/store/actions-type';
 
 export default defineComponent({
     name: 'App',
@@ -22,20 +23,23 @@ export default defineComponent({
         Task,
         Box
     },
-    data() {
-        return {
-            tasks: [] as ITask[],
-        }
-    },
     computed: {
         listIsEmpty(): boolean {
             return this.tasks.length === 0;
         }
     },
     methods: {
-        saveTask(task: ITask) {
+    /*    saveTask(task: ITask) {
             this.tasks.push(task)
-        },
+        },*/
+    },
+    setup() {
+        const store = useStore()
+        store.dispatch(GET_TASKS)
+        return {
+            tasks: computed(() => store.state.tasks),
+            store
+        }
     }
 });
 </script>
