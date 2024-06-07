@@ -4,3 +4,4 @@ export const CHANGE_PROJECT = 'CHANGE_PROJECT'
 export const REMOVE_PROJECT = 'REMOVE_PROJECT'
 
 export const GET_TASKS = 'GET_TASKS'
+export const REGISTER_TASK = 'REGISTER_TASK'

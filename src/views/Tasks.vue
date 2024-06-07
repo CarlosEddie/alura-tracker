@@ -14,7 +14,8 @@ import Form from '../components/Form.vue';
 import Task from '../components/Task.vue';
 import Box from '../components/Box.vue';
 import { useStore } from '@/store';
-import { GET_TASKS } from '@/store/actions-type';
+import { GET_PROJECTS, REGISTER_TASK, GET_TASKS } from '@/store/actions-type';
+import ITask from '@/interfaces/ITask';
 
 export default defineComponent({
     name: 'App',
@@ -29,13 +30,14 @@ export default defineComponent({
         }
     },
     methods: {
-    /*    saveTask(task: ITask) {
-            this.tasks.push(task)
-        },*/
+        saveTask(task: ITask): void {
+            this.store.dispatch(REGISTER_TASK, task)
+        },
     },
     setup() {
         const store = useStore()
         store.dispatch(GET_TASKS)
+        store.dispatch(GET_PROJECTS)
         return {
             tasks: computed(() => store.state.tasks),
             store
