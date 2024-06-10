@@ -7,3 +7,4 @@ export const NOTIFY = 'NOTIFY'
 
 export const DEFINE_TASKS = 'DEFINE_TASKS'
 export const ADD_TASK = 'ADD_TASK'
+export const MODIFY_TASK = 'MODIFY_TASK'

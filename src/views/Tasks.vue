@@ -1,10 +1,31 @@
 <template>
     <Form @whenSaveTask="saveTask" />
     <div class="list">
-        <Task v-for="(task, index) in tasks" :key="index" :task="task" />
+        <Task v-for="(task, index) in tasks" :key="index" :task="task" @when-task-clicked="selectTask" />
         <Box v-if="listIsEmpty">
             Let's start the tasks (*^w^)b
         </Box>
+        <div class="modal" :class="{ 'is-active': selectedTask }" v-if="selectedTask">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Editing a task</p>
+                    <button @click="closeModal" class="delete" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="field">
+                        <label for="taskDescription" class="label">Description</label>
+                        <input type="text" class="input" v-model="selectedTask.description" id="taskDescription" />
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <div class="buttons">
+                        <button @click="changeTask" class="button is-success">Save changes</button>
+                        <button @click="closeModal" class="button">Cancel</button>
+                    </div>
+                </footer>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -14,11 +35,16 @@ import Form from '../components/Form.vue';
 import Task from '../components/Task.vue';
 import Box from '../components/Box.vue';
 import { useStore } from '@/store';
-import { GET_PROJECTS, REGISTER_TASK, GET_TASKS } from '@/store/actions-type';
+import { GET_PROJECTS, REGISTER_TASK, GET_TASKS, CHANGE_TASK } from '@/store/actions-type';
 import ITask from '@/interfaces/ITask';
 
 export default defineComponent({
     name: 'App',
+    data() {
+        return {
+            selectedTask: null as ITask | null
+        }
+    },
     components: {
         Form,
         Task,
@@ -33,6 +59,16 @@ export default defineComponent({
         saveTask(task: ITask): void {
             this.store.dispatch(REGISTER_TASK, task)
         },
+        selectTask(task: ITask) {
+            this.selectedTask = task
+        },
+        closeModal() {
+            this.selectedTask = null
+        },
+        changeTask() {
+            this.store.dispatch(CHANGE_TASK, this.selectedTask)
+                .then(() => this.closeModal())
+        }
     },
     setup() {
         const store = useStore()

@@ -2,7 +2,7 @@
     <div class="box form">
         <div class="columns">
             <div class="column is-5" role="form" aria-label="Form for creating a new task">
-                <input type="text" class="input" placeholder="What task do yo   u want to start?" v-model="description">
+                <input type="text" class="input" placeholder="What task do you want to start?" v-model="description">
             </div>
             <div class="column is-3">
                 <div class="select">
