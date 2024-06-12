@@ -16,7 +16,7 @@
 <script lang="ts">
 import { NotificationType } from '@/interfaces/INotification';
 import { useStore } from '@/store'
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import useNotifier from '@/hooks/notifier'
 import { CHANGE_PROJECT, REGISTER_PROJECT } from '@/store/actions-type';
 
@@ -25,17 +25,6 @@ export default defineComponent({
     props: {
         id: {
             type: String
-        }
-    },
-    mounted() {
-        if (this.id) {
-            const project = this.store.state.project.projects.find(project => project.id == this.id)
-            this.projectName = project?.name || ''
-        }
-    },
-    data() {
-        return {
-            projectName: "",
         }
     },
     methods: {
@@ -59,12 +48,19 @@ export default defineComponent({
             this.$router.push('/projects')
         }
     },
-    setup() {
+    setup(props) {
         const store = useStore()
         const { notify } = useNotifier()
+        const projectName = ref("")
+
+        if(props.id) {
+            const project = store.state.project.projects.find(project => project.id == props.id)
+            projectName.value = project?.name || ''
+        }
         return {
             store,
-            notify
+            notify,
+            projectName,
         }
     }
 })
