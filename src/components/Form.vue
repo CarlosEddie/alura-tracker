@@ -15,14 +15,14 @@
                 </div>
             </div>
             <div class="column">
-                <Timer @when-timer-finished="finishTask" />
+                <Timer @when-timer-finished="saveTask" />
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import Timer from './Timer.vue';
 import { useStore } from 'vuex';
 import { key } from '@/store';
@@ -33,26 +33,27 @@ export default defineComponent({
     components: {
         Timer
     },
-    data() {
-        return {
-            description: '',
-            projectId: ''
-        }
-    },
-    methods: {
-        finishTask(elapsedTime: number): void {
-            this.$emit('whenSaveTask', {
-                durationInSeconds: elapsedTime,
-                description: this.description,
-                project: this.projects.find(project => project.id == this.projectId)
-            })
-            this.description = ''
-        }
-    },
-    setup() {
+    setup(props, { emit }) {
         const store = useStore(key)
+        const description = ref('')
+        const projectId = ref('')
+
+        const projects = computed(() => store.state.project.projects)
+
+        const saveTask =(elapsedTime: number): void => {
+            emit('whenSaveTask', {
+                durationInSeconds: elapsedTime,
+                description: description.value,
+                project: projects.value.find(project => project.id == projectId.value)
+            })
+            description.value = ''
+        }
+
         return {
-            projects: computed(() => store.state.project.projects)
+            description,
+            projectId,
+            projects,
+            saveTask: saveTask
         }
     }
 })

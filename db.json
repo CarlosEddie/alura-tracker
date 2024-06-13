@@ -41,6 +41,15 @@
         "id": "8b1d",
         "name": "Study plan"
       }
+    },
+    {
+      "id": "2912",
+      "durationInSeconds": 4,
+      "description": "abcde",
+      "project": {
+        "id": "1",
+        "name": "Alura Tracker"
+      }
     }
   ]
 }
