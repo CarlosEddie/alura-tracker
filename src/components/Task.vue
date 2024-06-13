@@ -17,7 +17,7 @@
 <script lang="ts">
 import ITask from '@/interfaces/ITask';
 import Stopwatch from './Stopwatch.vue';
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import Box from './Box.vue';
 
 export default defineComponent({
@@ -33,10 +33,19 @@ export default defineComponent({
             required: true
         }
     },
-    methods: {
-        clickedTask(): void {
-            this.$emit('whenTaskClicked', this.task)
-        } 
+    setup(props, { emit }) {
+        const clickedTask = (): void => {
+            emit('whenTaskClicked', props.task)
+        }
+
+        const timeSpent = computed(() => {
+            return new Date(props.task.durationInSeconds * 1000).toISOString().substring(11, 8)
+        })
+
+        return {
+            clickedTask,
+            timeSpent,
+        }
     }
 })
 
