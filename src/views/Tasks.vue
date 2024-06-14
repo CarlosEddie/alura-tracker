@@ -1,6 +1,14 @@
 <template>
     <Form @whenSaveTask="saveTask" />
     <div class="list">
+        <div class="field">
+            <p class="control has-icons-left">
+                <input class="input" type="text" placeholder="Type to filter" v-model="filter"/>
+                <span class="icon is-small is-left">
+                    <i class="fas fa-search"></i>
+                </span>
+            </p>
+        </div>
         <Task v-for="(task, index) in tasks" :key="index" :task="task" @when-task-clicked="selectTask" />
         <Box v-if="listIsEmpty">
             Let's start the tasks (*^w^)b
@@ -30,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref, watchEffect } from 'vue';
 import Form from '../components/Form.vue';
 import Task from '../components/Task.vue';
 import Box from '../components/Box.vue';
@@ -74,9 +82,18 @@ export default defineComponent({
         const store = useStore()
         store.dispatch(GET_TASKS)
         store.dispatch(GET_PROJECTS)
+        const filter = ref('')
+        
+        ///const tasks = computed(() => store.state.task.tasks.filter((t) => !filter.value || t.description.includes(filter.value)))
+        
+        watchEffect(() => {
+            store.dispatch(GET_TASKS, filter.value)
+        })
+
         return {
             tasks: computed(() => store.state.task.tasks),
-            store
+            store,
+            filter
         }
     }
 });

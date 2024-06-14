@@ -63,7 +63,7 @@
     {
       "id": "ec1a",
       "durationInSeconds": 7,
-      "description": "abcde",
+      "description": "abcdef",
       "project": {
         "id": "1",
         "name": "Alura Tracker"
